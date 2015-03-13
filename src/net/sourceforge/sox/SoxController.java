@@ -50,7 +50,7 @@ public class SoxController {
 			if (f.exists()) {
 				f.delete();
 			}
-			copyRawFile(ctx, resId, f, "0755");
+			copyRawFile(ctx, resId, f, "755");
 			return f.getCanonicalPath();
 		} catch (Exception e) {
 			Log.e(TAG, "installBinary failed: " + e.getLocalizedMessage());

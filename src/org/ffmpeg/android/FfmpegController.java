@@ -18,10 +18,6 @@ import java.util.StringTokenizer;
 import org.ffmpeg.android.ShellUtils.ShellCallback;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
@@ -59,7 +55,7 @@ public class FfmpegController {
 			if (f.exists()) {
 				f.delete();
 			}
-			copyRawFile(ctx, resId, f, "0755");
+			copyRawFile(ctx, resId, f, "755");
 			return f.getCanonicalPath();
 		} catch (Exception e) {
 			Log.e(TAG, "installBinary failed: " + e.getLocalizedMessage());
@@ -104,7 +100,7 @@ public class FfmpegController {
 	
 	private void enablePermissions () throws IOException
 	{
-		Runtime.getRuntime().exec("chmod 700 " + mFfmpegBin);
+		Runtime.getRuntime().exec("chmod 755 " + mFfmpegBin);
     	
 	}
 	

@@ -3,8 +3,8 @@ package org.ffmpeg.android;
 public class Clip implements Cloneable
 {
 
-	public int width = -1;
-	public int height = -1;
+	public int width = 480;
+	public int height = 320;
 	
 	public String videoCodec;
 	public String videoFps;
