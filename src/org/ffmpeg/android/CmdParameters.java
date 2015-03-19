@@ -1,6 +1,7 @@
 package org.ffmpeg.android;
 
 public class CmdParameters {
+	public static final String ROOT_FILE ="/org.ffmpeg.android/";
 	public static final String ROOT_PATH_FFMPEG = "/data/data/org.ffmpeg.android/ffmpeg";
 	public static final String ROOT_PATH_SOX = "/data/data/org.ffmpeg.android/sox";
 	/**

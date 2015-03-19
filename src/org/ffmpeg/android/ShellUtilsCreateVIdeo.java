@@ -1,14 +1,18 @@
 package org.ffmpeg.android;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.ffmpeg.android.filters.ProcessMaker;
 
 import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
 
 public class ShellUtilsCreateVIdeo {
 	private static ShellUtilsCreateVIdeo _instance;
@@ -20,22 +24,15 @@ public class ShellUtilsCreateVIdeo {
 		return _instance;
 	}
 
-	public final static String SHELL_CMD_CHMOD = "chmod";
-	public final static String SHELL_CMD_KILL = "kill -9";
-	public final static String SHELL_CMD_RM = "rm";
-	public final static String SHELL_CMD_PS = "ps";
-	public final static String SHELL_CMD_PIDOF = "pidof";
-
-	public final static String CHMOD_EXE_VALUE = "755";
-
 	public final String[] libraryAssets = { "ffmpeg", "libavcodec.so",
-			"libavcodec.so.52", "libavcodec.so.52.99.1", "libavcore.so",
-			"libavcore.so.0", "libavcore.so.0.16.0", "libavdevice.so",
-			"libavdevice.so.52", "libavdevice.so.52.2.2", "libavfilter.so",
-			"libavfilter.so.1", "libavfilter.so.1.69.0", "libavformat.so",
-			"libavformat.so.52", "libavformat.so.52.88.0", "libavutil.so",
-			"libavutil.so.50", "libavutil.so.50.34.0", "libswscale.so",
-			"libswscale.so.0", "libswscale.so.0.12.0", "libsox.so", "sox" };
+			"libavcodec.so.56", "libavcodec.so.56.1.100", "libpostproc.so.53",
+			"libpostproc.so.53.0.100", "libavdevice.so", "libswresample.so.1",
+			"libswresample.so.1.1.100", "libavdevice.so.56",
+			"libavdevice.so.56.0.100", "libavfilter.so", "libavfilter.so.5",
+			"libavfilter.so.5.1.100", "libavformat.so", "libavformat.so.56",
+			"libavformat.so.56.4.101", "libavutil.so", "libavutil.so.54",
+			"libavutil.so.54.7.100", "libswscale.so", "libswscale.so.3",
+			"libswscale.so.3.0.100" };
 
 	public ShellUtilsCreateVIdeo(Context context) {
 		for (int i = 0; i < libraryAssets.length; i++) {
@@ -51,10 +48,12 @@ public class ShellUtilsCreateVIdeo {
 		}
 		ProcessMaker processMaker = new ProcessMaker();
 		processMaker.processFFmpeg();
-		processMaker.processSox();
+		File savePath = new File(Environment.getExternalStorageDirectory()
+				.getPath() + CmdParameters.ROOT_FILE);
+		savePath.mkdirs();
 	}
 
-	public void cmdRun(String[] cmd) {
+	public void cmdRun(List<String> cmd) {
 		Process ffmpegProcess = null;
 		try {
 			ffmpegProcess = new ProcessBuilder(cmd).redirectErrorStream(true)
@@ -64,7 +63,7 @@ public class ShellUtilsCreateVIdeo {
 					ffmpegProcess.getInputStream()));
 			String line = null;
 			while ((line = reader.readLine()) != null) {
-
+				Log.v("LOG", "***" + line + "***");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
