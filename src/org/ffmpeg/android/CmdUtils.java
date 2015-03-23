@@ -2,11 +2,12 @@ package org.ffmpeg.android;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 public class CmdUtils {
-	private final static String FRAME_RATE_VAL = "10";
+	private final static String FRAME_RATE_VAL = "35";
 
 	/**
 	 * 
@@ -16,27 +17,28 @@ public class CmdUtils {
 	 *            path and file name video output
 	 * @return
 	 */
-	public static ArrayList<String> imagetoMp4(String imageURI,
-			String videoOutput) {
+	public static ArrayList<String> imagetoMp4(Context context,
+			String imageURI, String videoOutput) {
 		ArrayList<String> cmd = new ArrayList<String>();
 		cmd.add(CmdParameters.ROOT_PATH_FFMPEG);
 		cmd.add("-loop");
 		cmd.add("1");
+		cmd.add("-r");
+		cmd.add("1");
 		cmd.add("-i");
 		cmd.add(imageURI);
-		Log.d("LOG", imageURI);
+		cmd.add("-preset");
+		cmd.add("ultrafast");
 		cmd.add("-vcodec");
 		cmd.add("libx264");
 		cmd.add("-s");
-		cmd.add("1280x720");
+		cmd.add("640*480");
 		cmd.add("-strict");
 		cmd.add("experimental");
-		cmd.add("-r");
-		cmd.add(FRAME_RATE_VAL);
 		cmd.add("-t");
 		cmd.add("7");
-		cmd.add(Environment.getExternalStorageDirectory().getPath()
-				+ CmdParameters.ROOT_FILE + videoOutput + ".mp4");
+		cmd.add(context.getExternalCacheDir() + CmdParameters.ROOT_FILE
+				+ videoOutput + ".mp4");
 		return cmd;
 	}
 
@@ -67,7 +69,7 @@ public class CmdUtils {
 		cmd.add("0:0");
 		cmd.add("-map");
 		cmd.add("1:0");
-		
+
 		cmd.add(Environment.getExternalStorageDirectory().getPath()
 				+ CmdParameters.ROOT_FILE + videoOutput + ".mp4");
 		return cmd;
@@ -93,42 +95,27 @@ public class CmdUtils {
 	 *            name video output
 	 * @return
 	 */
-	public static ArrayList<String> addVideos(ArrayList<String> imagePath,
-			String videoOutput) {
+	public static ArrayList<String> addVideos(Context context,
+			String imagePath, String videoOutput) {
 		ArrayList<String> cmd = new ArrayList<String>();
 		//
 		cmd.add(CmdParameters.ROOT_PATH_FFMPEG);
-		cmd.add("-loop");
-		cmd.add("1");
-		for (int i = 0; i < imagePath.size(); i++) {
-			cmd.add("-i");
-			cmd.add(imagePath.get(i));
-		}
-//		cmd.add("-filter:v");
-//		for (int i = 0; i < imagePath.size(); i++) {
-//			if (i == 0)
-//				cmd.add("\"[" + i
-//						+ ":v]trim=duration=7,fade=t=out:st=6.5:d=0.5[v" + i
-//						+ "];");
-//			else
-//				cmd.add("["
-//						+ i
-//						+ ":v]trim=duration=7,fade=t=in:st=0.5:d=0.5,fade=t=out:st=6.5:d=0.5[v"
-//						+ i + "];");
-//		}
-//		cmd.add("[v0][v1][v2][v3][v4]concat=n=5:v=1:a=0,format=yuv420p[v]\"");
+		cmd.add("-t");
+		cmd.add("7");
+		cmd.add("-i");
+		cmd.add(imagePath + "/image%3d.jpg");
+		cmd.add("-preset");
+		cmd.add("ultrafast");
 		cmd.add("-vcodec");
 		cmd.add("libx264");
 		cmd.add("-s");
-		cmd.add("1280x720");
+		cmd.add("640*480");
 		cmd.add("-strict");
 		cmd.add("experimental");
 		cmd.add("-r");
 		cmd.add(FRAME_RATE_VAL);
-		cmd.add("-t");
-		cmd.add("7");
-		cmd.add(Environment.getExternalStorageDirectory().getPath()
-				+ CmdParameters.ROOT_FILE + videoOutput + ".mp4");
+		cmd.add(context.getExternalCacheDir() + CmdParameters.ROOT_FILE
+				+ videoOutput + ".mp4");
 		return cmd;
 	}
 
@@ -145,21 +132,29 @@ public class CmdUtils {
 	 * @return
 	 */
 
-	public static ArrayList<String> addJoin(String txtPath, String videoOutput) {
+	public static ArrayList<String> addJoin(Context context,
+			ArrayList<String> txtPath, String videoOutput) {
 		ArrayList<String> cmd = new ArrayList<String>();
 		cmd.add(CmdParameters.ROOT_PATH_FFMPEG);
-		cmd.add("-f");
-		cmd.add("concat");
+//		cmd.add("-f");
 		cmd.add("-i");
-		cmd.add(txtPath);
+		cmd.add("\"concat:");
+//		
+		for (int i = 0; i < txtPath.size(); i++) {
+			cmd.add(txtPath.get(i));
+			if (i != txtPath.size()) {
+				cmd.add("|");
+			}
+		}
+
 		cmd.add("-c");
 		cmd.add("libx264");
 		cmd.add("-crf");
 		cmd.add("22");
 		cmd.add("-acodec");
 		cmd.add("copy");
-		cmd.add(Environment.getExternalStorageDirectory().getPath()
-				+ CmdParameters.ROOT_FILE + videoOutput + ".mp4");
+		cmd.add(context.getExternalCacheDir() + CmdParameters.ROOT_FILE
+				+ videoOutput + ".mp4");
 		return cmd;
 	}
 

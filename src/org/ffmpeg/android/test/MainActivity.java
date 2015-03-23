@@ -33,21 +33,27 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				ArrayList<String> arrayList = new ArrayList<String>();
-				arrayList.add("/storage/emulated/0/Android/data/com.asus.gallery/FB_IMG_1425298915789.jpg");
-				arrayList.add("/storage/emulated/0/Android/data/com.asus.gallery/FB_IMG_1426223967234.jpg");
-				arrayList.add("/storage/emulated/0/Android/data/com.asus.gallery/FB_IMG_1425298915789.jpg");
-				arrayList.add("/storage/emulated/0/Android/data/com.asus.gallery/FB_IMG_1426223967234.jpg");
-				arrayList.add("/storage/emulated/0/Android/data/com.asus.gallery/FB_IMG_1425298915789.jpg");
+				arrayList.add("/storage/emulated/0/Android/data"
+						+ CmdParameters.ROOT_FILE + "videoOutput" + 0 + ".mp4");
+				arrayList.add("/storage/emulated/0/Android/data"
+						+ CmdParameters.ROOT_FILE + "videoOutput" + 1 + ".mp4");
+				arrayList.add("/storage/emulated/0/Android/data"
+						+ CmdParameters.ROOT_FILE + "videoOutput" + 2 + ".mp4");
+				arrayList.add("/storage/emulated/0/Android/data"
+						+ CmdParameters.ROOT_FILE + "videoOutput" + 3 + ".mp4");
+				arrayList.add("/storage/emulated/0/Android/data"
+						+ CmdParameters.ROOT_FILE + "videoOutput" + 4 + ".mp4");
+				arrayList.add("/storage/emulated/0/Android/data"
+						+ CmdParameters.ROOT_FILE + "videoOutput" + 5 + ".mp4");
 				ProcessCreateVideo process = new ProcessCreateVideo(
-						MainActivity.this,
-						arrayList,
-						"videoOutput", 2);
+						MainActivity.this, arrayList, "videoOutput", 2);
 				process.execute();
 			}
 		});
 	}
 
-	public class ProcessCreateVideo extends AsyncTask<List<String>, Void, String> {
+	public class ProcessCreateVideo extends
+			AsyncTask<List<String>, Void, String> {
 		private ArrayList<String> imagePath;
 		private String videoOutput;
 		private ShellUtilsCreateVIdeo shell;
@@ -63,15 +69,19 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected String doInBackground(List<String>... params) {
-			for(int i=0;i<imagePath.size();i++){
-				shell.cmdRun(CmdUtils.imagetoMp4(imagePath.get(i), videoOutput+i));
+			for (int i = 0; i < 6; i++) {
+				// shell.cmdRun(CmdUtils.imagetoMp4(MainActivity.this,
+				// "/storage/emulated/0/Android/data/com.asus.gallery/image00"+i+".jpg",
+				// videoOutput+i));
+				shell.cmdRun(CmdUtils.addJoin(MainActivity.this,
+						imagePath, videoOutput));
+
 			}
-			
-			File file = new File(Environment.getExternalStorageDirectory()
-					.getPath() + CmdParameters.ROOT_FILE + videoOutput + ".mp4");
+			File file = new File(MainActivity.this.getExternalCacheDir()
+					+ CmdParameters.ROOT_FILE + videoOutput + ".mp4");
 			if (file.isFile())
 
-				return Environment.getExternalStorageDirectory().getPath()
+				return MainActivity.this.getExternalCacheDir()
 						+ CmdParameters.ROOT_FILE + videoOutput + ".mp4";
 			else
 				return null;

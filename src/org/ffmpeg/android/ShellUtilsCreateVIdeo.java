@@ -48,8 +48,8 @@ public class ShellUtilsCreateVIdeo {
 		}
 		ProcessMaker processMaker = new ProcessMaker();
 		processMaker.processFFmpeg();
-		File savePath = new File(Environment.getExternalStorageDirectory()
-				.getPath() + CmdParameters.ROOT_FILE);
+		File savePath = new File(context.getExternalCacheDir()
+				+ CmdParameters.ROOT_FILE);
 		savePath.mkdirs();
 	}
 
